@@ -30,3 +30,5 @@ Restaurant_Booking_Bot.json contains the exported n8n workflow.
 Current Status
 
 The core booking workflow is functional, including booking, confirmation, Google Sheets storage, and checking the latest booking.
+
+Note: The “Choose Another” date option is currently not implemented. The Today and Tomorrow date options are functional.
