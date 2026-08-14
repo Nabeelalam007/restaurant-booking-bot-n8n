@@ -1,0 +1,2059 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "Hello! 👋 Please enter your name:",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🍽️ Book a Table",
+                    "additionalFields": {
+                      "callback_data": "book_table"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "📅 Check Booking",
+                    "additionalFields": {
+                      "callback_data": "check_booking"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "❌ Cancel Booking",
+                    "additionalFields": {
+                      "callback_data": "cancel_booking"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -3168,
+        -144
+      ],
+      "id": "86bdb170-74c7-4ee3-aadd-2535adbc5b42",
+      "name": "Send a text message",
+      "webhookId": "945bbe71-3216-40b4-bddf-17ef2d5614ad",
+      "credentials": {
+        "telegramApi": {
+          "id": "cb2DuUWODO4vYmzE",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message",
+          "callback_query"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -5632,
+        -304
+      ],
+      "id": "76d06e6f-64a1-4b43-bf4e-3a78a6ac6fa2",
+      "name": "Telegram Trigger",
+      "webhookId": "46f4f38c-cc3a-4125-9219-35d867bea0be",
+      "credentials": {
+        "telegramApi": {
+          "id": "cb2DuUWODO4vYmzE",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e5aca751-ec1a-4fea-b075-28c4a24657a0",
+              "name": "stage",
+              "value": " waiting_for_name",
+              "type": "string"
+            },
+            {
+              "id": "8a8949d8-485c-4f1d-bb62-f082c96f2b6a",
+              "name": "=user_id",
+              "value": "={{ $json.message.chat.id }}",
+              "type": "string"
+            },
+            {
+              "id": "c068022e-5f38-46d0-a101-452141e53680",
+              "name": "=Name",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3072,
+        112
+      ],
+      "id": "7b0341b1-c36d-4f71-90ef-15441cd9041a",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b9bb29d0-2bda-413f-b0ff-ab66217163e8",
+              "leftValue": "={{$json.message.text}}",
+              "rightValue": "/start",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -3472,
+        -224
+      ],
+      "id": "a03f0532-08d0-4486-a3a7-bd034d04ac67",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "80bdb1f7-b774-40a1-9658-8577647787e0",
+              "leftValue": "={{$json.callback_query.data}}",
+              "rightValue": "book_table",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -3872,
+        192
+      ],
+      "id": "2346f881-901e-4b48-a881-b4bd8fb4d529",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "chatId": "={{$json.callback_query.from.id}}",
+        "text": "Great! 🍽️ Let's start your booking.  Please select what you want to book:",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🍽️ Dinner Table",
+                    "additionalFields": {
+                      "callback_data": "dinner_table"
+                    }
+                  },
+                  {
+                    "text": "☕ Coffee Table",
+                    "additionalFields": {
+                      "callback_data": "coffee_table"
+                    }
+                  },
+                  {
+                    "text": "🎉 Party Reservation",
+                    "additionalFields": {
+                      "callback_data": "party_reservation"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -3280,
+        240
+      ],
+      "id": "fefad73b-c2ff-4f47-9361-0dd574146363",
+      "name": "Send a text message1",
+      "webhookId": "b3a8fe74-ae44-4ba7-801f-bc6ff3c5999d",
+      "credentials": {
+        "telegramApi": {
+          "id": "cb2DuUWODO4vYmzE",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4ef1d0a4-68e2-4f25-ae73-ba54b8791c28",
+              "leftValue": "={{$json.message.text}}",
+              "rightValue": "is not empty",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "fca53766-1b48-49a4-810b-3ccbc47426b7",
+              "leftValue": "={{$json.message.text}}",
+              "rightValue": "/start",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -3648,
+        -16
+      ],
+      "id": "b22bce28-e047-4026-a902-be9c77d51b66",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.user_id }}",
+        "text": "=Nice to meet you, {{$json.Name}} 😊\nPlease select your booking date.",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Today",
+                    "additionalFields": {
+                      "callback_data": "today"
+                    }
+                  },
+                  {
+                    "text": "Tomorrow",
+                    "additionalFields": {
+                      "callback_data": "tomorrow"
+                    }
+                  },
+                  {
+                    "text": "Choose another date",
+                    "additionalFields": {
+                      "callback_data": "custom_date"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -2720,
+        -16
+      ],
+      "id": "64d86869-7541-449b-9640-90809883460e",
+      "name": "Send a text message2",
+      "webhookId": "d61dc4a2-75d4-476c-879e-4ef2ccfb5133",
+      "credentials": {
+        "telegramApi": {
+          "id": "cb2DuUWODO4vYmzE",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "Great! Nabeel 😊  Please select your booking date:",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Today",
+                    "additionalFields": {
+                      "callback_data": "today"
+                    }
+                  },
+                  {
+                    "text": "Tomorrow",
+                    "additionalFields": {
+                      "callback_data": "tomorrow"
+                    }
+                  },
+                  {
+                    "text": "Choose another date",
+                    "additionalFields": {
+                      "callback_data": "custom_date"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -2048,
+        96
+      ],
+      "id": "7b806122-96f6-400d-b010-169a2fb91be0",
+      "name": "Send a text message3",
+      "webhookId": "5c17b3c7-e3a3-471c-9549-d67005bda0c5",
+      "credentials": {
+        "telegramApi": {
+          "id": "cb2DuUWODO4vYmzE",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "79f96020-9c52-4f07-8141-b377abcdfd0a",
+              "leftValue": "={{$json.callback_query.data}}",
+              "rightValue": "today",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -3648,
+        -400
+      ],
+      "id": "7432f839-36b0-4b16-b348-1d869eff5cda",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.callback_query.from.id }}",
+        "text": "Great! 📅 You selected your booking date. Please select your preferred time:",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "6:00 PM",
+                    "additionalFields": {
+                      "callback_data": "6pm"
+                    }
+                  },
+                  {
+                    "text": "7:00 PM",
+                    "additionalFields": {
+                      "callback_data": "7pm"
+                    }
+                  },
+                  {
+                    "text": "8:00 PM",
+                    "additionalFields": {
+                      "callback_data": "8pm"
+                    }
+                  },
+                  {
+                    "text": "9:00 PM",
+                    "additionalFields": {
+                      "callback_data": "9pm"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -2720,
+        -464
+      ],
+      "id": "c7bf2211-c999-4701-b855-c91707cfb096",
+      "name": "Send a text message4",
+      "webhookId": "156836d7-04f3-4f53-9359-7fed8114090a",
+      "credentials": {
+        "telegramApi": {
+          "id": "cb2DuUWODO4vYmzE",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "99268232-403f-48c6-83f5-82cce29c5f4f",
+              "leftValue": "={{$json.callback_query.data}}",
+              "rightValue": "7pm",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -4352,
+        -480
+      ],
+      "id": "4508769a-2650-4224-b3f5-19c90e0784ba",
+      "name": "If4"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.callback_query.from.id }}",
+        "text": "=Perfect! ✅  Your booking details:  Name: Nabeel Date: Today Time: {{ $json.Time }}  Confirm your booking?",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "✅ Confirm Booking",
+                    "additionalFields": {
+                      "callback_data": "confirm_booking"
+                    }
+                  },
+                  {
+                    "text": "❌ Cancel Booking",
+                    "additionalFields": {
+                      "callback_data": "cancel_booking"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -5152,
+        -1424
+      ],
+      "id": "eeca31bd-4f58-4854-a3c0-9af0383b4b94",
+      "name": "Send a text message5",
+      "webhookId": "290f49eb-d454-4d9e-8a30-a90e7ec46bad",
+      "credentials": {
+        "telegramApi": {
+          "id": "cb2DuUWODO4vYmzE",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "68fd1edc-c999-40a1-8c57-4c2f1eaf83d2",
+              "leftValue": "={{$json.callback_query.data}}",
+              "rightValue": "confirm_booking",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -3232,
+        448
+      ],
+      "id": "9806c24f-906b-4127-9af3-867c2e00e0fd",
+      "name": "If5"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.callback_query.from.id }}",
+        "text": "🎉 Your table has been booked successfully!  Thank you for choosing our restaurant. We look forward to serving you 🍽️",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -2800,
+        528
+      ],
+      "id": "dbb85925-69f2-4fd6-9458-9a750a9d87f7",
+      "name": "Send a text message6",
+      "webhookId": "9502bd69-e8a2-4cda-a903-c36714bf9632",
+      "credentials": {
+        "telegramApi": {
+          "id": "cb2DuUWODO4vYmzE",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "eb7e2474-9ef7-45c3-8810-faa9c29d66bf",
+              "leftValue": "={{$json.callback_query.data}}",
+              "rightValue": "cancel_booking",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -3440,
+        512
+      ],
+      "id": "90f6c140-8ab3-4d74-8148-a74fdebed58e",
+      "name": "If6"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.callback_query.from.id }}",
+        "text": "❌ Your booking has been cancelled.  If you want to make a new reservation, press /start.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -2992,
+        736
+      ],
+      "id": "90a6b38f-03af-4cbe-b7db-051bb5e8e9c1",
+      "name": "Send a text message7",
+      "webhookId": "3799785e-df71-4201-9532-e987ae0eaf6c",
+      "credentials": {
+        "telegramApi": {
+          "id": "cb2DuUWODO4vYmzE",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "15OWPyXWyj2qkaqUs-Cu8BOqsq24M8PDlEaa_qOSPk9U",
+          "mode": "list",
+          "cachedResultName": "Restaurant_Booking_Data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15OWPyXWyj2qkaqUs-Cu8BOqsq24M8PDlEaa_qOSPk9U/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15OWPyXWyj2qkaqUs-Cu8BOqsq24M8PDlEaa_qOSPk9U/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.name }}",
+            "Service": "Restaurant Booking",
+            "Date": "={{ $json.date }}",
+            "Time": "={{ $json.time }}",
+            "Status": "Confirmed"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Service",
+              "displayName": "Service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Time",
+              "displayName": "Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2192,
+        608
+      ],
+      "id": "d7a561c1-29aa-4959-b451-47bb2e299d7c",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Y0KGS8630sauZXCm",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "136420dd-54e4-4fae-9c43-9b3f50575fcd",
+              "leftValue": "={{$json.callback_query.data}}",
+              "rightValue": "dinner_table",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -3632,
+        704
+      ],
+      "id": "9fccf114-7c76-449f-92e7-7a895b33a5d4",
+      "name": "If7"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.callback_query.from.id }}",
+        "text": "Great! 🍽️ You selected Dinner Table.  Please enter your name:",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -3152,
+        912
+      ],
+      "id": "2ba58abe-34d2-4ddc-a52f-e5aa089d0069",
+      "name": "Send a text message8",
+      "webhookId": "9125ab28-52c1-4aef-941d-63c77c6c68de",
+      "credentials": {
+        "telegramApi": {
+          "id": "cb2DuUWODO4vYmzE",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1f1f188e-8829-4254-aecf-49bc84077521",
+              "name": "=Date",
+              "value": "={{ $json.callback_query.data }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3232,
+        -400
+      ],
+      "id": "1fdf04e9-09c8-4c81-925d-6c777d18d742",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ca9907d6-6c11-4d2e-a3cf-b068e6b0d14c",
+              "name": "=Time",
+              "value": "={{ $json.callback_query.data }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3792,
+        -880
+      ],
+      "id": "b0f293f6-be3d-495f-9f88-a34b0bcdaf47",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "Ks833PtTSXNmLTUG",
+          "mode": "list",
+          "cachedResultName": "Restaurant_Bookings",
+          "cachedResultUrl": "/projects/r1n1EjrluHrPtFYb/datatables/Ks833PtTSXNmLTUG"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "user_id": "={{ $json.user_id }}",
+            "name": "={{ $json.Name }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "time",
+              "displayName": "time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false,
+          "column": [
+            {
+              "name": "user_id"
+            },
+            {
+              "name": "name"
+            },
+            {
+              "name": "date"
+            },
+            {
+              "name": "time"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -2720,
+        224
+      ],
+      "id": "0024d2c8-3d63-481c-8c1a-340e457609b4",
+      "name": "Insert row"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "Ks833PtTSXNmLTUG",
+          "mode": "list",
+          "cachedResultName": "Restaurant_Bookings",
+          "cachedResultUrl": "/projects/r1n1EjrluHrPtFYb/datatables/Ks833PtTSXNmLTUG"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "user_id",
+              "keyValue": "={{ $('Telegram Trigger').item.json.callback_query.from.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "date": "={{ $json.callback_query.data }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "time",
+              "displayName": "time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -2288,
+        -176
+      ],
+      "id": "6eaf70e3-eea6-49be-8c14-23b4e303f3cb",
+      "name": "Update row(s)"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "Ks833PtTSXNmLTUG",
+          "mode": "list",
+          "cachedResultName": "Restaurant_Bookings",
+          "cachedResultUrl": "/projects/r1n1EjrluHrPtFYb/datatables/Ks833PtTSXNmLTUG"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "user_id",
+              "keyValue": "={{ $('Telegram Trigger').item.json.callback_query.from.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "time": "={{ $json.Time }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "time",
+              "displayName": "time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -3296,
+        -624
+      ],
+      "id": "9ca8b3d4-7748-4a52-bf61-79c15e41ac6c",
+      "name": "Update row(s)1"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "Ks833PtTSXNmLTUG",
+          "mode": "list",
+          "cachedResultName": "Restaurant_Bookings",
+          "cachedResultUrl": "/projects/r1n1EjrluHrPtFYb/datatables/Ks833PtTSXNmLTUG"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "user_id",
+              "keyValue": "={{ $json.callback_query.from.id }}"
+            }
+          ]
+        },
+        "limit": 1,
+        "orderBy": true,
+        "orderByColumn": "id"
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -2496,
+        608
+      ],
+      "id": "37ee3c51-8e49-42c0-a7c0-5c82996f052d",
+      "name": "Get row(s)"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4cdc96d6-7eac-47ef-abba-20c77ddb1a08",
+              "leftValue": "={{ $json.callback_query.data }}",
+              "rightValue": "check_booking",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -5408,
+        1120
+      ],
+      "id": "79bee0d5-8d40-437b-a355-973fa9e8e3fe",
+      "name": "If8"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.callback_query.from.id }}",
+        "text": "Please enter your name first to check your booking.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -4720,
+        768
+      ],
+      "id": "92fdfa84-a90f-4047-823d-4e4dd0ab3481",
+      "name": "Send a text message9",
+      "webhookId": "9f11e8ff-9e47-49fb-b3b9-e54e75cd6b19",
+      "credentials": {
+        "telegramApi": {
+          "id": "cb2DuUWODO4vYmzE",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "=Your latest booking:\n\nName: {{ $json.Name }}\nDate: {{ $json.Date }}\nTime: {{ $json.Time }}\nStatus: {{ $json.Status }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -4096,
+        1040
+      ],
+      "id": "e0a2f3e9-56a2-446b-a8de-ab135c2e32fe",
+      "name": "Send a text message10",
+      "webhookId": "e94404b4-4d48-4057-a0c6-ccc4268d9b8a",
+      "credentials": {
+        "telegramApi": {
+          "id": "cb2DuUWODO4vYmzE",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.callback_query.from.id }}",
+        "text": "Hello! 👋 Please enter your name:",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -3568,
+        192
+      ],
+      "id": "5cc95754-32bd-40a4-a386-53973b96e736",
+      "name": "Send a text message11",
+      "webhookId": "af8cc61d-c1c7-4a8f-8907-e82ea4fe7af6",
+      "credentials": {
+        "telegramApi": {
+          "id": "cb2DuUWODO4vYmzE",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a7975d78-8b81-436c-8ffb-0b886c43721b",
+              "leftValue": "={{ $json.callback_query.data }}",
+              "rightValue": "6pm",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -4912,
+        -928
+      ],
+      "id": "04a7cb73-ebab-4786-91d3-267de81a98b9",
+      "name": "If9"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "15ef98dc-c3fc-4968-a094-7828b7fe4787",
+              "name": "stage",
+              "value": "waiting_for_confirmation",
+              "type": "string"
+            },
+            {
+              "id": "0a1b6b49-b550-4dc9-8cf0-11d4bddf2192",
+              "name": "Time",
+              "value": "={{ $json.callback_query.data }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -4160,
+        -1312
+      ],
+      "id": "5caa923e-c5d8-41d3-9b65-3fb0dfdceac4",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2e144d48-55e7-4999-97fe-59f9e9c3339e",
+              "leftValue": "={{ $json.callback_query.data }}",
+              "rightValue": "8pm",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -5184,
+        224
+      ],
+      "id": "3a0d8228-3ab5-4ac6-898d-00940a7fcb1d",
+      "name": "If10"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d9e00806-a651-40c2-bb0f-97934da8284d",
+              "name": "=time",
+              "value": "={{ $json.callback_query.data }}",
+              "type": "string"
+            },
+            {
+              "id": "9f38909e-3efa-404f-9b63-06f3c5b144b8",
+              "name": "Date",
+              "value": "=tomorrow",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -5744,
+        -688
+      ],
+      "id": "e58bfeb6-4eef-4e55-8a0e-66a35a59da99",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "42a45aae-5468-43b0-bbab-c6807823a68d",
+              "leftValue": "={{ $json.callback_query.data }}",
+              "rightValue": "9pm",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -6160,
+        -1040
+      ],
+      "id": "90ceaf86-18e5-4918-9d6f-c051cc67fd0b",
+      "name": "If11"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "23f83cc9-f202-49dd-a913-b65d11ce7111",
+              "name": "=Time",
+              "value": "={{ $json.callback_query.data }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -5952,
+        -1136
+      ],
+      "id": "c3305f0b-54ab-440e-a080-7f91e6aa69ef",
+      "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "15OWPyXWyj2qkaqUs-Cu8BOqsq24M8PDlEaa_qOSPk9U",
+          "mode": "list",
+          "cachedResultName": "Restaurant_Booking_Data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15OWPyXWyj2qkaqUs-Cu8BOqsq24M8PDlEaa_qOSPk9U/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15OWPyXWyj2qkaqUs-Cu8BOqsq24M8PDlEaa_qOSPk9U/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Time": "={{ $json.time }}",
+            "row_number": 25,
+            "Name": "Nabeel",
+            "Date": "={{ $json.Date }}",
+            "Status": "Confirmed"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Time",
+              "displayName": "Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -5536,
+        -688
+      ],
+      "id": "bb039ae7-8fe2-4d4b-abc4-251529a0dc7e",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Y0KGS8630sauZXCm",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows = $input.all();\n\nconst valid = rows\n  .filter(item => item.json.Time && item.json.Time !== '')\n  .sort((a, b) => Number(b.json.row_number) - Number(a.json.row_number));\n\nconst chat_id = $('Telegram Trigger').first().json.callback_query.from.id;\n\nif (valid.length === 0) {\n  return [{\n    json: {\n      chat_id,\n      Name: 'Nabeel',\n      Date: 'No booking found',\n      Time: '',\n      Status: ''\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    Name: valid[0].json.Name,\n    Date: valid[0].json.Date,\n    Time: valid[0].json.Time,\n    Status: valid[0].json.Status,\n    chat_id\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -4448,
+        1072
+      ],
+      "id": "78f0f80a-9795-4026-94e5-cdfc9796df99",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "15OWPyXWyj2qkaqUs-Cu8BOqsq24M8PDlEaa_qOSPk9U",
+          "mode": "list",
+          "cachedResultName": "Restaurant_Booking_Data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15OWPyXWyj2qkaqUs-Cu8BOqsq24M8PDlEaa_qOSPk9U/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15OWPyXWyj2qkaqUs-Cu8BOqsq24M8PDlEaa_qOSPk9U/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Name",
+              "lookupValue": "Nabeel"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -4736,
+        1072
+      ],
+      "id": "18612183-7860-4041-bff2-d4595f7fd088",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Y0KGS8630sauZXCm",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a5325dda-e8cb-4acf-8f68-d3b751507c42",
+              "name": "chat_id",
+              "value": "={{ $json.callback_query.from.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -5072,
+        1072
+      ],
+      "id": "54c22413-d980-4dd0-94f0-f2906c085b87",
+      "name": "Edit Fields6"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3822579f-c138-440d-b216-216b6291cf8b",
+              "leftValue": "={{ $json.callback_query.data }}",
+              "rightValue": "tomorrow",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -3104,
+        -992
+      ],
+      "id": "e3e6ed0e-d1d7-4c9b-9c0f-c260fde967d9",
+      "name": "If12"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f277d119-70ac-41ff-b6f6-a54563998e80",
+              "name": "Date",
+              "value": "tomorrow",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2480,
+        -960
+      ],
+      "id": "479ceaae-328a-4fea-94e5-59e30a7a27ca",
+      "name": "Edit Fields7"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If5",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If6",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If7",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If8",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If9",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If10",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If11",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If12",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Insert row",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message2": {
+      "main": [
+        []
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If4": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If5": {
+      "main": [
+        [
+          {
+            "node": "Send a text message6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If6": {
+      "main": [
+        [
+          {
+            "node": "Send a text message7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message6": {
+      "main": [
+        []
+      ]
+    },
+    "If7": {
+      "main": [
+        [
+          {
+            "node": "Send a text message8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Update row(s)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Send a text message5",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update row(s)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message4": {
+      "main": [
+        []
+      ]
+    },
+    "Get row(s)": {
+      "main": [
+        []
+      ]
+    },
+    "If8": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields6",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "If9": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Send a text message5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If10": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If11": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Send a text message5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a text message5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a text message10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields6": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If12": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields7": {
+      "main": [
+        [
+          {
+            "node": "Send a text message4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "1abbc512-0174-4864-8d20-5d1fac877f23",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e51b299fb959b152f51ea62c7584cd4899c896d276e4efa8256b98a49f97e2fd"
+  },
+  "nodeGroups": [],
+  "id": "X0ezkRK8GKJAmirR",
+  "tags": []
+}
